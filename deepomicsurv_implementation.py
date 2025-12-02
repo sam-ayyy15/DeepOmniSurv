@@ -27,7 +27,10 @@ warnings.filterwarnings('ignore')
 from lifelines.utils import concordance_index
 from lifelines import KaplanMeierFitter
 import shap
-shap.initjs()  # ensure SHAP is initialized quietly
+try:
+    shap.initjs()  # ensure SHAP is initialized quietly
+except:
+    pass  # Skip if not in Jupyter environment
 
 # Set random seeds for reproducibility
 np.random.seed(42)
@@ -66,7 +69,11 @@ class DataLoader:
             print("Data files not found. Generating realistic TCGA-HNSC data...")
             
             # Import and use the realistic data generator
-            from realistic_tcga_generator import RealisticTCGAGenerator
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("tcga_gen", "TCGA-HNSC_data_generator.py")
+            tcga_gen = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(tcga_gen)
+            RealisticTCGAGenerator = tcga_gen.RealisticTCGAGenerator
             
             generator = RealisticTCGAGenerator(n_patients=528, random_seed=42)
             self.clinical_data, self.mrna_data, self.methylation_data, self.cna_data = generator.save_all_data(data_dir)
@@ -99,8 +106,8 @@ class DataLoader:
         categorical_cols = clinical.select_dtypes(include=['object']).columns
         for feature in categorical_cols:
             if clinical[feature].isnull().any():
-                clinical[feature].fillna(method='ffill', inplace=True)
-                clinical[feature].fillna(method='bfill', inplace=True)
+                clinical[feature] = clinical[feature].ffill()
+                clinical[feature] = clinical[feature].bfill()
         
         # Drop features with too many missing values (>50%)
         missing_threshold = 0.5
@@ -269,7 +276,7 @@ class DimensionalityReducer:
         autoencoder, encoder = self.create_autoencoder(X.shape[1], encoding_dim)
         
         # Train autoencoder
-        early_stopping = EarlyStopping(patience=20, restore_best_weights=True)
+        early_stopping = EarlyStopping(patience=20)
         autoencoder.fit(X, X, epochs=epochs, batch_size=batch_size, 
                        validation_split=0.2, callbacks=[early_stopping], verbose=0)
         
@@ -399,7 +406,7 @@ class DeepOmicsSurv:
         
         # Callbacks
         callbacks = [
-            EarlyStopping(patience=30, monitor='val_loss', restore_best_weights=True),
+            EarlyStopping(patience=30, monitor='val_loss'),
             ReduceLROnPlateau(factor=0.5, patience=10, min_lr=1e-6)
         ]
         
@@ -893,7 +900,7 @@ def run_experiment():
         plt.grid(True, alpha=0.3)
         plt.tight_layout()
         plt.savefig('survival_curves.png', dpi=300, bbox_inches='tight')
-        plt.show()
+        plt.close()  # Close figure instead of showing in non-interactive environments
         
         print("Survival curves generated successfully!")
         
