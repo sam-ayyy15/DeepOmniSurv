@@ -1,0 +1,61 @@
+{
+  "patient_id": "PATIENT-XXX",
+  "patient_name": "Patient Name",
+  "date_collected": "YYYY-MM-DD",
+  
+  "clinical_data": {
+    "demographics": {
+      "age": 0,
+      "gender": "Male or Female",
+      "race": "White, Asian, Black, Other",
+      "ethnicity": "Hispanic or Latino, Not Hispanic or Latino"
+    },
+    
+    "tumor_characteristics": {
+      "primary_site": "Oral Cavity, Oropharynx, Larynx, Hypopharynx, Other",
+      "tumor_stage": "Stage I, Stage II, Stage III, Stage IVA, Stage IVB, Stage IVC",
+      "tumor_grade": "G1 (Well differentiated), G2 (Moderately differentiated), G3 (Poorly differentiated)",
+      "tumor_size": "T1, T2, T3, T4, T4a, T4b",
+      "lymph_nodes": "N0, N1, N2, N2a, N2b, N2c, N3, NX",
+      "metastasis": "M0 (No metastasis), M1 (Distant metastasis), MX (Unknown)"
+    },
+    
+    "risk_factors": {
+      "smoking_history": "Never, Former, Current",
+      "pack_years": 0,
+      "alcohol_history": "Yes, No",
+      "drinks_per_week": 0,
+      "hpv_status": "Positive, Negative, Unknown"
+    },
+    
+    "treatment_history": {
+      "prior_malignancy": "Yes, No",
+      "radiation_therapy": "Yes, No",
+      "chemotherapy": "Yes, No",
+      "surgery": "Yes, No"
+    },
+    
+    "vital_signs": {
+      "weight_kg": 0,
+      "height_cm": 0,
+      "bmi": 0
+    }
+  },
+  
+  "genetic_data": {
+    "note": "Genetic data is optional. If not available, model will use clinical data only.",
+    "mrna_expression": null,
+    "dna_methylation": null,
+    "copy_number_alterations": null
+  },
+  
+  "notes": {
+    "instructions": [
+      "Fill in all clinical data fields",
+      "Use exact values from the options provided",
+      "Genetic data is optional but improves accuracy",
+      "Save as patient_XXX.json where XXX is patient number",
+      "Use this file with the prediction scripts"
+    ]
+  }
+}

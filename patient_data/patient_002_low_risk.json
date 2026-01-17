@@ -1,0 +1,58 @@
+{
+  "patient_id": "PATIENT-002",
+  "patient_name": "Sample Low Risk Patient",
+  "date_collected": "2024-12-04",
+  
+  "clinical_data": {
+    "demographics": {
+      "age": 45,
+      "gender": "Female",
+      "race": "Asian",
+      "ethnicity": "Not Hispanic or Latino"
+    },
+    
+    "tumor_characteristics": {
+      "primary_site": "Oropharynx",
+      "tumor_stage": "Stage I",
+      "tumor_grade": "G1",
+      "tumor_size": "T1",
+      "lymph_nodes": "N0",
+      "metastasis": "M0"
+    },
+    
+    "risk_factors": {
+      "smoking_history": "Never",
+      "pack_years": 0,
+      "alcohol_history": "No",
+      "drinks_per_week": 0,
+      "hpv_status": "Positive"
+    },
+    
+    "treatment_history": {
+      "prior_malignancy": "No",
+      "radiation_therapy": "No",
+      "chemotherapy": "No",
+      "surgery": "No"
+    },
+    
+    "vital_signs": {
+      "weight_kg": 60,
+      "height_cm": 165,
+      "bmi": 22.0
+    }
+  },
+  
+  "genetic_data": {
+    "note": "Genetic data is optional. If not available, model will use clinical data only.",
+    "mrna_expression": null,
+    "dna_methylation": null,
+    "copy_number_alterations": null
+  },
+  
+  "expected_outcome": {
+    "note": "This is for validation purposes only",
+    "risk_category": "LOW RISK",
+    "estimated_survival_months": 72,
+    "risk_score_range": "-2.0 to -0.5"
+  }
+}
