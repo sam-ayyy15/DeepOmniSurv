@@ -1,5 +1,5 @@
 # DeepOmniSurv
-Deep Learning-Based Model for Survival Prediction of Oral Cancer
+Deep Learning-Based Model for Survival Prediction of Oral Cancer.
 
 Developers:
 - Samay Shetty
