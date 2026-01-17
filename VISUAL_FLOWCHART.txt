@@ -1,0 +1,348 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  DeepOmicsSurv - COMPLETE VISUAL FLOWCHART                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+                         ┌─────────────────────────┐
+                         │   START: NEW PATIENT    │
+                         └───────────┬─────────────┘
+                                     │
+                                     ▼
+        ╔════════════════════════════════════════════════════════════╗
+        ║                    STEP 1: DATA COLLECTION                 ║
+        ╚════════════════════════════════════════════════════════════╝
+                                     │
+                    ┌────────────────┴────────────────┐
+                    │                                 │
+                    ▼                                 ▼
+        ┌───────────────────────┐       ┌───────────────────────┐
+        │   CLINICAL DATA       │       │   GENETIC DATA        │
+        │                       │       │                       │
+        │ • Age: 65            │       │ • mRNA: 20,531 genes │
+        │ • Gender: Male       │       │ • Methylation: 485K  │
+        │ • Stage: IVA         │       │ • CNA: 24,776 regions│
+        │ • Grade: G3          │       │                       │
+        │ • Smoking: Former    │       │ (Optional but better)│
+        │ • Alcohol: Yes       │       │                       │
+        │ • HPV: Negative      │       │                       │
+        └───────────┬───────────┘       └───────────┬───────────┘
+                    │                               │
+                    └────────────────┬──────────────┘
+                                     │
+                                     ▼
+        ╔════════════════════════════════════════════════════════════╗
+        ║                  STEP 2: DATA PREPROCESSING                ║
+        ╚════════════════════════════════════════════════════════════╝
+                                     │
+                    ┌────────────────┴────────────────┐
+                    │                                 │
+                    ▼                                 ▼
+        ┌───────────────────────┐       ┌───────────────────────┐
+        │  ENCODE CLINICAL      │       │  REDUCE GENETIC       │
+        │                       │       │                       │
+        │  Male → 1             │       │  20,531 → 100        │
+        │  Stage IVA → 4        │       │  (Autoencoder)       │
+        │  Grade G3 → 3         │       │                       │
+        │  Former → 1           │       │  485,577 → 100       │
+        │  Yes → 1              │       │  (Autoencoder)       │
+        │  Negative → 0         │       │                       │
+        │                       │       │  24,776 → 100        │
+        │  Result: 15 features  │       │  (Autoencoder)       │
+        └───────────┬───────────┘       └───────────┬───────────┘
+                    │                               │
+                    └────────────────┬──────────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  COMBINE FEATURES     │
+                         │                       │
+                         │  Clinical: 15         │
+                         │  mRNA: 100            │
+                         │  Methylation: 100     │
+                         │  CNA: 100             │
+                         │  ─────────────────    │
+                         │  Total: 315 features  │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  SCALE FEATURES       │
+                         │  (Normalize 0-1)      │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+        ╔════════════════════════════════════════════════════════════╗
+        ║                  STEP 3: MODEL PREDICTION                  ║
+        ╚════════════════════════════════════════════════════════════╝
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │   INPUT LAYER         │
+                         │   (315 features)      │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  CONVOLUTIONAL        │
+                         │  LAYERS               │
+                         │  (Pattern Detection)  │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  ATTENTION            │
+                         │  MECHANISM            │
+                         │  (Focus Important)    │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  DENSE LAYERS         │
+                         │  (Combine Info)       │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │  OUTPUT LAYER         │
+                         │  (Risk Score)         │
+                         └───────────┬───────────┘
+                                     │
+                                     ▼
+        ╔════════════════════════════════════════════════════════════╗
+        ║                  STEP 4: INTERPRETATION                    ║
+        ╚════════════════════════════════════════════════════════════╝
+                                     │
+                                     ▼
+                         ┌───────────────────────┐
+                         │   RISK SCORE: 2.45    │
+                         └───────────┬───────────┘
+                                     │
+                    ┌────────────────┼────────────────┐
+                    │                │                │
+                    ▼                ▼                ▼
+        ┌──────────────────┐ ┌──────────────┐ ┌──────────────────┐
+        │ CLASSIFY RISK    │ │ CALCULATE    │ │ IDENTIFY KEY     │
+        │                  │ │ SURVIVAL     │ │ FACTORS          │
+        │ Score > 1.0      │ │ PROBABILITY  │ │                  │
+        │ → HIGH RISK      │ │              │ │ 1. Stage (IVA)   │
+        │                  │ │ 12mo: 72%    │ │ 2. Age (65)      │
+        │ Percentile: 78%  │ │ 24mo: 45%    │ │ 3. Grade (G3)    │
+        │                  │ │ 60mo: 15%    │ │ 4. Lymph nodes   │
+        └──────────┬───────┘ └──────┬───────┘ └──────────┬───────┘
+                   │                │                     │
+                   └────────────────┼─────────────────────┘
+                                    │
+                                    ▼
+        ╔════════════════════════════════════════════════════════════╗
+        ║                  STEP 5: FINAL REPORT                      ║
+        ╚════════════════════════════════════════════════════════════╝
+                                    │
+                                    ▼
+        ┌────────────────────────────────────────────────────────────┐
+        │                    PREDICTION REPORT                       │
+        │                                                             │
+        │  Patient ID: TCGA-AA-0042                                  │
+        │  ═══════════════════════════════════════════════════════   │
+        │                                                             │
+        │  RISK ASSESSMENT:                                          │
+        │    Risk Score: 2.45                                        │
+        │    Category: ⚠️  HIGH RISK                                 │
+        │    Percentile: 78th (worse than 78% of patients)          │
+        │                                                             │
+        │  SURVIVAL PREDICTION:                                      │
+        │    Median Survival: 18 months                              │
+        │    12-month probability: 72%                               │
+        │    24-month probability: 45%                               │
+        │    60-month probability: 15%                               │
+        │                                                             │
+        │  KEY RISK FACTORS:                                         │
+        │    1. Tumor Stage (IVA) - Very High Impact                │
+        │    2. Age (65 years) - High Impact                         │
+        │    3. Tumor Grade (G3) - High Impact                       │
+        │    4. Lymph Node Involvement - High Impact                 │
+        │    5. Smoking History - Moderate Impact                    │
+        │                                                             │
+        │  RECOMMENDATIONS:                                          │
+        │    ⚠️  Aggressive treatment required                       │
+        │    • Intensive multimodal therapy                          │
+        │    • Combination chemo + radiation                         │
+        │    • Close monitoring every 4-6 weeks                      │
+        │    • Consider clinical trial                               │
+        │    • Smoking cessation program                             │
+        │                                                             │
+        │  MODEL CONFIDENCE: 85%                                     │
+        │  Model Accuracy (C-index): 0.75                            │
+        └────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │   END: CLINICAL      │
+                         │   DECISION SUPPORT   │
+                         └──────────────────────┘
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                        PARALLEL COMPARISON VIEW                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────┬─────────────────────┬─────────────────────┐
+│   LOW RISK PATIENT  │  MODERATE RISK      │   HIGH RISK PATIENT │
+├─────────────────────┼─────────────────────┼─────────────────────┤
+│                     │                     │                     │
+│ INPUT:              │ INPUT:              │ INPUT:              │
+│  Age: 45           │  Age: 58           │  Age: 65           │
+│  Stage: I          │  Stage: II         │  Stage: IVA        │
+│  Smoking: Never    │  Smoking: Current  │  Smoking: Former   │
+│  HPV: Positive     │  HPV: Unknown      │  HPV: Negative     │
+│                     │                     │                     │
+│        ↓            │        ↓            │        ↓            │
+│                     │                     │                     │
+│ PROCESSING:         │ PROCESSING:         │ PROCESSING:         │
+│  Encode → Scale    │  Encode → Scale    │  Encode → Scale    │
+│  Neural Network    │  Neural Network    │  Neural Network    │
+│                     │                     │                     │
+│        ↓            │        ↓            │        ↓            │
+│                     │                     │                     │
+│ OUTPUT:             │ OUTPUT:             │ OUTPUT:             │
+│  Risk: -1.20       │  Risk: 0.80        │  Risk: 2.45        │
+│  Category: LOW     │  Category: MODERATE│  Category: HIGH    │
+│  Survival: >60mo   │  Survival: 30mo    │  Survival: 18mo    │
+│                     │                     │                     │
+│  12mo: 95% ████    │  12mo: 82% ███     │  12mo: 72% ███     │
+│  24mo: 88% ████    │  24mo: 65% ███     │  24mo: 45% ██      │
+│  60mo: 78% ███     │  60mo: 42% ██      │  60mo: 15% █       │
+│                     │                     │                     │
+│        ↓            │        ↓            │        ↓            │
+│                     │                     │                     │
+│ RECOMMENDATION:     │ RECOMMENDATION:     │ RECOMMENDATION:     │
+│  ✅ Standard        │  ⚠️  Monitor        │  ⚠️  Aggressive     │
+│  treatment         │  closely           │  treatment         │
+│  Regular follow-up │  Smoking cessation │  Intensive therapy │
+│  Excellent outlook │  Standard + watch  │  Close monitoring  │
+│                     │                     │                     │
+└─────────────────────┴─────────────────────┴─────────────────────┘
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                         MODEL ARCHITECTURE DETAIL                          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+                    Input: 315 features (batch_size, 315, 1)
+                                    │
+                                    ▼
+        ┌───────────────────────────────────────────────────────┐
+        │  CONVOLUTIONAL BLOCK 1                                │
+        │  ┌─────────────────────────────────────────────────┐  │
+        │  │ Conv1D (32 filters, kernel=3, activation=relu) │  │
+        │  │ BatchNormalization                              │  │
+        │  │ MaxPooling1D (pool_size=2)                      │  │
+        │  │ Dropout (0.2)                                   │  │
+        │  └─────────────────────────────────────────────────┘  │
+        └───────────────────────┬───────────────────────────────┘
+                                │
+                                ▼
+        ┌───────────────────────────────────────────────────────┐
+        │  CONVOLUTIONAL BLOCK 2                                │
+        │  ┌─────────────────────────────────────────────────┐  │
+        │  │ Conv1D (32 filters, kernel=3, activation=relu) │  │
+        │  │ BatchNormalization                              │  │
+        │  │ MaxPooling1D (pool_size=2)                      │  │
+        │  │ Dropout (0.2)                                   │  │
+        │  └─────────────────────────────────────────────────┘  │
+        └───────────────────────┬───────────────────────────────┘
+                                │
+                                ▼
+        ┌───────────────────────────────────────────────────────┐
+        │  MULTI-HEAD ATTENTION                                 │
+        │  ┌─────────────────────────────────────────────────┐  │
+        │  │ 4 attention heads                               │  │
+        │  │ Key dimension: 64                               │  │
+        │  │ Focuses on important features                   │  │
+        │  └─────────────────────────────────────────────────┘  │
+        └───────────────────────┬───────────────────────────────┘
+                                │
+                                ▼
+        ┌───────────────────────────────────────────────────────┐
+        │  GLOBAL AVERAGE POOLING                               │
+        │  (Reduces to fixed-size vector)                       │
+        └───────────────────────┬───────────────────────────────┘
+                                │
+                                ▼
+        ┌───────────────────────────────────────────────────────┐
+        │  DENSE BLOCK (4 layers)                               │
+        │  ┌─────────────────────────────────────────────────┐  │
+        │  │ Dense (64 units, activation=relu, L2 reg)      │  │
+        │  │ BatchNormalization                              │  │
+        │  │ Dropout (0.2)                                   │  │
+        │  │                                                  │  │
+        │  │ Dense (64 units, activation=relu, L2 reg)      │  │
+        │  │ BatchNormalization                              │  │
+        │  │ Dropout (0.2)                                   │  │
+        │  │                                                  │  │
+        │  │ Dense (64 units, activation=relu, L2 reg)      │  │
+        │  │ BatchNormalization                              │  │
+        │  │ Dropout (0.2)                                   │  │
+        │  │                                                  │  │
+        │  │ Dense (64 units, activation=relu, L2 reg)      │  │
+        │  │ BatchNormalization                              │  │
+        │  │ Dropout (0.2)                                   │  │
+        │  └─────────────────────────────────────────────────┘  │
+        └───────────────────────┬───────────────────────────────┘
+                                │
+                                ▼
+        ┌───────────────────────────────────────────────────────┐
+        │  OUTPUT LAYER                                         │
+        │  ┌─────────────────────────────────────────────────┐  │
+        │  │ Dense (1 unit, activation=linear, L2 reg)      │  │
+        │  │ Output: Log hazard (risk score)                 │  │
+        │  └─────────────────────────────────────────────────┘  │
+        └───────────────────────┬───────────────────────────────┘
+                                │
+                                ▼
+                        Output: Risk Score
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                            TRAINING PROCESS                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+    528 Patients (TCGA-HNSC Dataset)
+                │
+                ├─── 70% Training (369 patients)
+                │         │
+                │         ├─── 80% Train (295 patients)
+                │         │         │
+                │         │         ▼
+                │         │    ┌─────────────────┐
+                │         │    │  Train Model    │
+                │         │    │  (500 epochs)   │
+                │         │    └────────┬────────┘
+                │         │             │
+                │         └─── 20% Validation (74 patients)
+                │                       │
+                │                       ▼
+                │                  ┌─────────────────┐
+                │                  │  Tune & Monitor │
+                │                  │  Early Stopping │
+                │                  └─────────────────┘
+                │
+                └─── 30% Testing (159 patients)
+                          │
+                          ▼
+                     ┌─────────────────┐
+                     │  Final Evaluate │
+                     │  C-index: 0.75  │
+                     └─────────────────┘
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                              SUMMARY                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+  INPUT → PREPROCESS → MODEL → INTERPRET → REPORT
+    ↓         ↓          ↓         ↓          ↓
+  Patient   Encode   Neural   Calculate   Clinical
+   Data     Scale    Network   Risk       Decision
+  (Raw)    (Clean)  (Predict) (Classify)  (Action)
+
+  RESULT: Accurate survival prediction to guide treatment decisions
